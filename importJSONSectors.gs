@@ -37,6 +37,29 @@ function concatValues() {
 /**
  * @customfunction
  **/
+function ImportDailyDataList(query, parseOptions) {
+  var header = {headers: {Authorization: apiKey}};
+
+  let response = [];
+
+  tickers = concatValues();
+  tickers = tickers.split(",")
+
+  tickers.map((ticker, index) => {
+    var url = "https://api.sectors.app/v1/daily/" + ticker;
+    var jsondata = UrlFetchApp.fetch(url, header);
+    var object   = JSON.parse(jsondata.getContentText());
+
+    object.map(function(obj) {
+      response.push(obj);
+    })
+  })
+  return parseJSONObject_(response, query, parseOptions, includeXPath_, defaultTransform_);
+}
+
+/**
+ * @customfunction
+ **/
 function ImportCompanyReport(ticker, section, query, parseOptions) {
   var header = {headers: {Authorization: apiKey}};
   var url = "https://api.sectors.app/v1/company/report/" + ticker + "/?sections=" + section;
